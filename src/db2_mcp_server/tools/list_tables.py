@@ -28,6 +28,8 @@ DB_CONNECTION_STRING = get_db_connection_string()
 
 class ListTablesInput(BaseModel):
     """Input for listing tables in a DB2 database."""
+    model_config = {"json_schema_extra": {"required": []}}
+
     schema_name: str = Field(default="", description="Schema name to filter tables (optional)")
     table_type: str = Field(default="", description="Table type to filter (e.g., 'T' for tables, 'V' for views)")
     limit: int = Field(default=100, description="Maximum number of tables to return")
