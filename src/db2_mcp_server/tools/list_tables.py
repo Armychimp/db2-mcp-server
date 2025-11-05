@@ -28,16 +28,16 @@ DB_CONNECTION_STRING = get_db_connection_string()
 
 class ListTablesInput(BaseModel):
     """Input for listing tables in a DB2 database."""
-    schema: Optional[str] = Field(None, description="Schema name to filter tables (optional)")
-    table_type: Optional[str] = Field(None, description="Table type to filter (e.g., 'T' for tables, 'V' for views)")
-    limit: Optional[int] = Field(100, description="Maximum number of tables to return")
+    schema_name: str = Field(default="", description="Schema name to filter tables (optional)")
+    table_type: str = Field(default="", description="Table type to filter (e.g., 'T' for tables, 'V' for views)")
+    limit: int = Field(default=100, description="Maximum number of tables to return")
 
 class ListTablesResult(BaseModel):
     """Result of listing tables."""
-    tables: List[str] = Field(description="List of table names")
-    count: int = Field(description="Number of tables returned")
-    schema_filter: Optional[str] = Field(None, description="Schema filter applied")
-    table_type_filter: Optional[str] = Field(None, description="Table type filter applied")
+    tables: List[str] = Field(default=[], description="List of table names")
+    count: int = Field(default=0, description="Number of tables returned")
+    schema_filter: str = Field(default="", description="Schema filter applied")
+    table_type_filter: str = Field(default="", description="Table type filter applied")
 
 def _list_tables_impl(ctx, args: ListTablesInput) -> ListTablesResult:
     """Internal implementation of list_tables for testing."""
@@ -65,9 +65,9 @@ def list_tables_logic(args: ListTablesInput) -> ListTablesResult:
         params = []
 
         # Add schema filter if provided
-        if args.schema:
+        if args.schema_name and args.schema_name.strip():
             sql += " AND TABSCHEMA = ?"
-            params.append(args.schema.upper()) # DB2 schema names often uppercase
+            params.append(args.schema_name.upper()) # DB2 schema names often uppercase
 
         sql += " ORDER BY TABNAME"
 
@@ -95,7 +95,7 @@ def list_tables_logic(args: ListTablesInput) -> ListTablesResult:
         return ListTablesResult(
             tables=tables,
             count=len(tables),
-            schema_filter=args.schema,
+            schema_filter=args.schema_name,
             table_type_filter=args.table_type
         )
 
