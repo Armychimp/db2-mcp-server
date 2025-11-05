@@ -4,14 +4,27 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 import ibm_db
 import logging
+import os
 from db2_mcp_server.cache import CacheManager
 from db2_mcp_server.logger import logger
 from fastmcp import FastMCP
 from ..mcp_instance import mcp  # Import the shared mcp instance
 
-# Placeholder for DB connection details - should be configured securely
-# Example: Read from environment variables or a config file
-DB_CONNECTION_STRING = "DATABASE=your_db;HOSTNAME=your_host;PORT=your_port;PROTOCOL=TCPIP;UID=readonly_user;PWD=your_password;" # pragma: allowlist secret
+# Build connection string from environment variables
+def get_db_connection_string():
+    """Build DB2 connection string from environment variables."""
+    host = os.getenv("DB2_HOST", "localhost")
+    port = os.getenv("DB2_PORT", "50000")
+    database = os.getenv("DB2_DATABASE", "")
+    username = os.getenv("DB2_USERNAME", "")
+    password = os.getenv("DB2_PASSWORD", "")
+
+    if not database or not username:
+        raise ValueError("DB2_DATABASE and DB2_USERNAME must be set in environment variables")
+
+    return f"DATABASE={database};HOSTNAME={host};PORT={port};PROTOCOL=TCPIP;UID={username};PWD={password};"
+
+DB_CONNECTION_STRING = get_db_connection_string()
 
 class ListTablesInput(BaseModel):
     """Input for listing tables in a DB2 database."""
