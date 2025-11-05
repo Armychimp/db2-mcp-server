@@ -38,8 +38,9 @@ def main():
 
   args = parser.parse_args()
   if args.transport == "stream_http":
-    port = int(os.getenv("MCP_PORT", "3721"))
-    mcp.run(transport="http", host="127.0.0.1", port=port, path="/mcp")
+    # For HTTP transport, use 'streamable-http'
+    # Note: host/port are configured in mcp_instance.py
+    mcp.run(transport="streamable-http", mount_path="/mcp")
   else:
     mcp.run(transport=args.transport)
 
