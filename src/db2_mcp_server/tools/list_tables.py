@@ -123,4 +123,14 @@ def list_tables(ctx, args: ListTablesInput) -> ListTablesResult:
     Connects to the DB2 database using read-only credentials and queries
     SYSCAT.TABLES to retrieve a list of tables.
     """
-    return list_tables_logic(args)
+    logger.debug(f"list_tables called with args: {args}")
+    logger.debug(f"Context type: {type(ctx)}")
+    logger.debug(f"Context: {ctx}")
+
+    try:
+        result = list_tables_logic(args)
+        logger.debug(f"list_tables returning {result.count} tables")
+        return result
+    except Exception as e:
+        logger.error(f"list_tables failed: {e}", exc_info=True)
+        raise

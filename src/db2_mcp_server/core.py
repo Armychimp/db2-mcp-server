@@ -35,13 +35,40 @@ def main():
     default="stdio",
     help="Transport type (stdio or stream_http)",
   )
+  parser.add_argument(
+    "--debug",
+    action="store_true",
+    help="Enable debug logging",
+  )
 
   args = parser.parse_args()
+
+  # Enable debug logging if requested
+  debug_enabled = args.debug or os.getenv("MCP_DEBUG", "").lower() in ("1", "true", "yes")
+  if debug_enabled:
+    logging.getLogger().setLevel(logging.DEBUG)
+    logger.setLevel(logging.DEBUG)
+    logger.debug("Debug logging enabled")
+
+    # Enable debug middleware for detailed MCP protocol logging
+    from .debug_middleware import enable_debug_middleware
+    enable_debug_middleware(mcp)
+    logger.debug("Debug middleware enabled")
+
+  logger.info(f"Starting DB2 MCP Server")
+  logger.info(f"Transport: {args.transport}")
+  logger.info(f"DB2_HOST: {os.getenv('DB2_HOST', 'not set')}")
+  logger.info(f"DB2_PORT: {os.getenv('DB2_PORT', 'not set')}")
+  logger.info(f"DB2_DATABASE: {os.getenv('DB2_DATABASE', 'not set')}")
+  logger.info(f"DB2_USERNAME: {os.getenv('DB2_USERNAME', 'not set')}")
+
   if args.transport == "stream_http":
     # For HTTP transport, use 'streamable-http'
     # Note: host/port are configured in mcp_instance.py
+    logger.info(f"Starting streamable-http transport on port {os.getenv('MCP_PORT', '3721')}")
     mcp.run(transport="streamable-http", mount_path="/mcp")
   else:
+    logger.info("Starting stdio transport")
     mcp.run(transport=args.transport)
 
 

@@ -442,6 +442,33 @@ docker restart db2
 - Verify connection: `claude mcp list` should show "✓ Connected"
 - Check MCP server health: `claude mcp get db2-mcp-server`
 
+### Debugging Connection Issues (400 Bad Request, etc.)
+
+Enable verbose debug logging to diagnose issues:
+
+```bash
+# Option 1: Add --debug flag to your config
+claude mcp add --transport stdio db2-mcp-server \
+  --env MCP_DEBUG=1 \
+  --env DB2_HOST=localhost \
+  ... \
+  -- uv --directory /path/to/db2-mcp-server run db2-mcp-server --debug
+
+# Option 2: Set environment variable
+export MCP_DEBUG=1
+
+# Option 3: Check the log file
+tail -f mcp_server.log
+```
+
+Debug mode logs:
+- All MCP protocol calls (list_tools, call_tool, etc.)
+- Request parameters and responses
+- Database connection details
+- Full error stack traces
+
+See [DEBUG_MODE.md](DEBUG_MODE.md) for complete debugging documentation.
+
 ### Import Errors
 ```bash
 # Ensure virtual environment is activated
