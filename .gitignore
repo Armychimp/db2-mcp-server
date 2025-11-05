@@ -175,3 +175,4 @@ cython_debug/
 
 # Claude Code project-level MCP config (contains credentials)
 .claude/
+mcp_server.log
