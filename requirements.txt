@@ -1,0 +1,13 @@
+# DB2 MCP Server Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core MCP and database dependencies
+fastmcp>=2.2.6
+ibm_db
+pydantic
+python-dotenv
+toml
+dotenv>=0.9.9
+
+# Development dependencies (optional)
+# Install with: pip install -r requirements.txt -r requirements-dev.txt

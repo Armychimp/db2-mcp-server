@@ -30,12 +30,27 @@ cd db2-mcp-server
 ```
 
 ### 2. Install Dependencies
+
+#### Option A: Using uv (Recommended)
 ```bash
 # Install uv if you don't have it
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Create virtual environment and install dependencies
 uv sync
+```
+
+#### Option B: Using pip
+```bash
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Optional: Install development dependencies
+pip install -r requirements-dev.txt
 ```
 
 ### 3. Set Up DB2 Database

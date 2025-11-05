@@ -1,0 +1,7 @@
+# Development and Testing Dependencies
+# Install with: pip install -r requirements.txt -r requirements-dev.txt
+
+pytest>=7.0.0
+pytest-cov
+build>=1.2.2.post1
+twine>=6.1.0
