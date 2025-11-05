@@ -53,7 +53,9 @@ source .venv/bin/activate
 db2-mcp-server-stream-http
 ```
 
-The server will run on: **http://0.0.0.0:3721/mcp**
+The server will run on: **http://0.0.0.0:3721/mcp/** (note the trailing slash)
+
+**Important:** The MCP endpoint is at `/mcp/` (with trailing slash). Accessing `/mcp` will redirect (307) to `/mcp/`.
 
 ### Testing with MCP Inspector
 
@@ -63,8 +65,10 @@ Once the server is running, you can connect with MCP Inspector:
 # In another terminal
 npx @modelcontextprotocol/inspector \
   --transport sse \
-  --server-url http://localhost:3721/mcp
+  --server-url http://localhost:3721/mcp/
 ```
+
+**Note:** Use `/mcp/` with trailing slash for bobidea and other MCP clients.
 
 This will open a web UI at http://localhost:5173 to test the MCP server.
 

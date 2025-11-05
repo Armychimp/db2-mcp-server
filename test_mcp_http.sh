@@ -4,12 +4,12 @@
 # This doesn't require an IDE connection
 
 echo "Starting MCP server in HTTP mode..."
-echo "Server will run on http://127.0.0.1:3721/mcp"
+echo "Server will run on http://127.0.0.1:3721"
 echo ""
 echo "In another terminal, you can test with curl:"
 echo ""
-echo "  # List available tools"
-echo "  curl -X POST http://127.0.0.1:3721/mcp ..."
+echo "  # Check the root path"
+echo "  curl http://127.0.0.1:3721"
 echo ""
 
 export DB2_HOST=localhost

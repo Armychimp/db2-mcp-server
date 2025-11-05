@@ -65,8 +65,9 @@ def main():
   if args.transport == "stream_http":
     # For HTTP transport, use 'streamable-http'
     # Note: host/port are configured in mcp_instance.py
+    # Use root path without trailing slash for compatibility
     logger.info(f"Starting streamable-http transport on port {os.getenv('MCP_PORT', '3721')}")
-    mcp.run(transport="streamable-http", mount_path="/mcp")
+    mcp.run(transport="streamable-http")
   else:
     logger.info("Starting stdio transport")
     mcp.run(transport=args.transport)
