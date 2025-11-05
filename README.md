@@ -143,14 +143,29 @@ print(f'✓ Connected! Found {result.count} tables')
 The easiest way to use this MCP server with Claude Code is via the CLI:
 
 ```bash
+# Navigate to the project directory
 cd /path/to/db2-mcp-server
+
+# Add the MCP server (replace /path/to/db2-mcp-server with your actual path)
 claude mcp add --transport stdio db2-mcp-server \
   --env DB2_HOST=localhost \
   --env DB2_PORT=50000 \
   --env DB2_DATABASE=TESTDB \
   --env DB2_USERNAME=db2inst1 \
   --env DB2_PASSWORD=password \
-  -- uv --directory $(pwd) run db2-mcp-server
+  -- uv --directory /path/to/db2-mcp-server run db2-mcp-server
+```
+
+**Example with actual path:**
+```bash
+# If your project is at /home/user/projects/db2-mcp-server
+claude mcp add --transport stdio db2-mcp-server \
+  --env DB2_HOST=localhost \
+  --env DB2_PORT=50000 \
+  --env DB2_DATABASE=TESTDB \
+  --env DB2_USERNAME=db2inst1 \
+  --env DB2_PASSWORD=password \
+  -- uv --directory /home/user/projects/db2-mcp-server run db2-mcp-server
 ```
 
 Verify the connection:
