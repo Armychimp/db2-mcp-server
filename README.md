@@ -91,12 +91,42 @@ Example `.env` configuration for Docker:
 ```bash
 DB2_HOST=localhost
 DB2_PORT=50000
-DB2_DATABASE=SAMPLE
+DB2_DATABASE=TESTDB       # Use the actual DB name from step 5
 DB2_USERNAME=db2inst1
 DB2_PASSWORD=password
 ```
 
-### 5. Test the Connection
+### 5. Verify Database Name
+
+The Docker container creates a database, but the name might not be what you expect. Check it:
+
+```bash
+docker exec db2 bash -c "su - db2inst1 -c 'db2 list database directory'"
+```
+
+Update your `.env` file with the actual database name (often `TESTDB` instead of `SAMPLE`).
+
+### 6. Create Test Data (Optional)
+
+Populate the database with sample tables:
+
+```bash
+source .venv/bin/activate
+python setup_test_data.py
+```
+
+This creates:
+- **CUSTOMERS** table (5 rows)
+- **PRODUCTS** table (7 rows)
+- **EMPLOYEES** table (6 rows)
+- **ORDERS** table (8 rows)
+
+View the test data:
+```bash
+python view_test_data.py
+```
+
+### 7. Test the Connection
 ```bash
 source .venv/bin/activate
 python -c "
@@ -106,6 +136,27 @@ from src.db2_mcp_server.tools.list_tables import list_tables_logic, ListTablesIn
 result = list_tables_logic(ListTablesInput())
 print(f'✓ Connected! Found {result.count} tables')
 "
+```
+
+## Using with Claude Code
+
+The easiest way to use this MCP server with Claude Code is via the CLI:
+
+```bash
+cd /path/to/db2-mcp-server
+claude mcp add --transport stdio db2-mcp-server \
+  --env DB2_HOST=localhost \
+  --env DB2_PORT=50000 \
+  --env DB2_DATABASE=TESTDB \
+  --env DB2_USERNAME=db2inst1 \
+  --env DB2_PASSWORD=password \
+  -- uv --directory $(pwd) run db2-mcp-server
+```
+
+Verify the connection:
+```bash
+claude mcp list
+# Should show: db2-mcp-server - ✓ Connected
 ```
 
 ## Using with Claude Desktop
@@ -125,7 +176,14 @@ Add this configuration to your Claude Desktop config file:
         "/path/to/db2-mcp-server",
         "run",
         "db2-mcp-server"
-      ]
+      ],
+      "env": {
+        "DB2_HOST": "localhost",
+        "DB2_PORT": "50000",
+        "DB2_DATABASE": "TESTDB",
+        "DB2_USERNAME": "db2inst1",
+        "DB2_PASSWORD": "password"
+      }
     }
   }
 }
@@ -226,8 +284,17 @@ docker restart db2
 
 ### Connection Refused
 - Ensure DB2 container has finished initializing (3-5 minutes)
+  ```bash
+  docker logs db2 2>&1 | grep -i "setup has completed"
+  ```
 - Check port 50000 is not being used by another service: `lsof -i :50000`
 - Verify credentials in `.env` file
+- **Verify the database name**: Run `docker exec db2 bash -c "su - db2inst1 -c 'db2 list database directory'"` to check the actual database name (might be `TESTDB` not `SAMPLE`)
+
+### MCP Server Not Connecting in Claude Code
+- Use the CLI to add the server: `claude mcp add --transport stdio ...`
+- Verify connection: `claude mcp list` should show "✓ Connected"
+- Check MCP server health: `claude mcp get db2-mcp-server`
 
 ### Import Errors
 ```bash
