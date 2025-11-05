@@ -66,7 +66,14 @@ docker run -d \
   -e DB2INST1_PASSWORD=password \
   -e DBNAME=SAMPLE \
   icr.io/db2_community/db2
+```
 
+**Copy-paste one-liner:**
+```bash
+docker run -d --name db2 --privileged=true -p 50000:50000 -e LICENSE=accept -e DB2INST1_PASSWORD=password -e DBNAME=SAMPLE icr.io/db2_community/db2
+```
+
+```bash
 # Wait 3-5 minutes for DB2 to initialize
 # Check if ready:
 docker logs db2 2>&1 | grep -i "setup has completed"
@@ -156,6 +163,11 @@ claude mcp add --transport stdio db2-mcp-server \
   -- uv --directory /path/to/db2-mcp-server run db2-mcp-server
 ```
 
+**Copy-paste one-liner (replace /path/to/db2-mcp-server with your actual path):**
+```bash
+claude mcp add --transport stdio db2-mcp-server --env DB2_HOST=localhost --env DB2_PORT=50000 --env DB2_DATABASE=TESTDB --env DB2_USERNAME=db2inst1 --env DB2_PASSWORD=password -- uv --directory /path/to/db2-mcp-server run db2-mcp-server
+```
+
 **Example with actual path:**
 ```bash
 # If your project is at /home/user/projects/db2-mcp-server
@@ -166,6 +178,11 @@ claude mcp add --transport stdio db2-mcp-server \
   --env DB2_USERNAME=db2inst1 \
   --env DB2_PASSWORD=password \
   -- uv --directory /home/user/projects/db2-mcp-server run db2-mcp-server
+```
+
+**Copy-paste one-liner:**
+```bash
+claude mcp add --transport stdio db2-mcp-server --env DB2_HOST=localhost --env DB2_PORT=50000 --env DB2_DATABASE=TESTDB --env DB2_USERNAME=db2inst1 --env DB2_PASSWORD=password -- uv --directory /home/user/projects/db2-mcp-server run db2-mcp-server
 ```
 
 Verify the connection:
