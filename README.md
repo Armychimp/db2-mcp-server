@@ -2,16 +2,16 @@
 
 [![PyPI version](https://badge.fury.io/py/db2-mcp-server.svg)](https://badge.fury.io/py/db2-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen.svg)](https://github.com/huangjien/db2-mcp-server)
+[![Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen.svg)](https://github.com/Armychimp/db2-mcp-server)
 
 ## Overview
-The `db2-mcp-server` is a Python-based Model Context Protocol (MCP) server for interacting with IBM DB2 databases. It enables AI assistants like Claude to query DB2 databases, list tables, and retrieve metadata through a secure, read-only interface.
+The `db2-mcp-server` is a Python-based Model Context Protocol (MCP) server for interacting with IBM DB2 databases. It enables AI assistants like Claude to query DB2 databases through a secure, read-only interface.
 
 ## Features
-- **List Tables**: Retrieve a list of tables from the connected DB2 database
-- **Get Table Metadata**: Fetch metadata for specific tables, including column details and data types
-- **Dynamic Prompt Loading**: Load custom prompts from JSON configuration files for flexible query assistance
+- **List Tables Tool**: Query tables from your DB2 database with filtering by schema and table type
 - **Built-in Prompts**: Pre-configured prompts for DB2 query help and schema analysis
+- **Dynamic Prompt Loading**: Load custom prompts from JSON configuration files for flexible query assistance
+- **Resource Templates**: Access DB2 connection guides and query templates
 - **Read-Only Access**: Security-focused design prevents write operations
 - **Environment-Based Configuration**: Secure credential management through environment variables
 
@@ -238,17 +238,72 @@ db2-mcp-server-stream-http
 # Server runs on http://127.0.0.1:3721/mcp
 ```
 
-## Available Tools
+## MCP Interface
 
-Once connected, the MCP server provides:
+### Tools
 
-- **list_tables**: List all tables in the database
-  - Parameters: `schema` (optional), `table_type` (optional), `limit` (default: 100)
+The server exposes the following MCP tool:
 
-## Resources
+#### `list_tables`
+Lists tables in the DB2 database with optional filtering.
 
-- **db2://connection-guide**: DB2 connection configuration guide
-- **db2://query-templates**: Common DB2 query templates
+**Parameters:**
+- `schema_name` (optional): Filter by schema name
+- `table_type` (optional): Filter by table type (e.g., 'T' for tables, 'V' for views)
+- `limit` (optional, default: 100): Maximum number of tables to return
+
+**Example usage in Claude:**
+> Can you list all tables in the database?
+>
+> Show me all views in the MYSCHEMA schema
+
+### Prompts
+
+The server provides three built-in prompts:
+
+#### `db2_query_helper`
+Generates helpful prompts for DB2 query construction with best practices.
+
+**Parameters:**
+- `context` (optional): Additional context for the prompt
+- `table_name` (optional): Specific table to focus on
+
+#### `db2_schema_analyzer`
+Provides guidance for analyzing DB2 schema structures, relationships, and optimization.
+
+**Parameters:**
+- `context` (optional): Additional context for analysis
+
+#### `dynamic_prompt`
+Loads custom prompts from JSON configuration files (see Dynamic Prompts section).
+
+**Parameters:**
+- `prompt_name` (optional): Name of the dynamic prompt to use
+- `context` (optional): Additional context
+- `table_name` (optional): Specific table name
+
+### Resources
+
+The server exposes two resources with DB2 reference information:
+
+#### `db2://connection-guide`
+Comprehensive guide for DB2 connection configuration, including:
+- Environment variable setup
+- Connection string formats
+- Security best practices
+
+#### `db2://query-templates`
+Common DB2 query templates for:
+- Basic SELECT queries
+- Table and column metadata queries
+- Index information
+- Table size queries
+- Foreign key relationships
+
+**Example usage in Claude:**
+> Show me the DB2 connection guide
+>
+> What query templates are available?
 
 ## Dynamic Prompts
 
@@ -265,7 +320,7 @@ See `examples/prompts_config.json` for a complete example and `docs/DYNAMIC_PROM
 
 ## Testing
 
-The project includes comprehensive test coverage (**92.98%**) to ensure reliability.
+The project includes comprehensive test coverage (**93%**) to ensure reliability.
 
 ### Run Tests
 ```bash
@@ -280,10 +335,11 @@ pytest --cov=src/db2_mcp_server --cov-report=term-missing -v
 
 ### Test Suite Coverage
 - Core functionality (`test_core.py`)
-- Database tools (`test_list_tables.py`, `test_metadata_retrieval.py`)
+- Database tools (`test_list_tables.py`)
 - Caching mechanism (`test_cache.py`)
 - Logging configuration (`test_logger.py`)
 - Dynamic prompt loading (`test_dynamic_loader.py`, `test_integration_dynamic_prompts.py`)
+- Storage functionality (`test_table_metadata.py`)
 
 ## Security
 

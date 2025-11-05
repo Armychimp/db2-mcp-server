@@ -29,8 +29,8 @@ dev = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/huangjien/db2-mcp-server" # Add repository URL if available
-"Bug Tracker" = "https://github.com/huangjien/db2-mcp-server/issues" # Add issue tracker URL if available
+"Homepage" = "https://github.com/Armychimp/db2-mcp-server"
+"Bug Tracker" = "https://github.com/Armychimp/db2-mcp-server/issues"
 
 
 [project.scripts]

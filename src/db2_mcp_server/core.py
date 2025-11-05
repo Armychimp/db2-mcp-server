@@ -27,7 +27,7 @@ from .resources import db2_resources  # Import resources
 def main():
   """Entry point for the CLI."""
   parser = argparse.ArgumentParser(
-    description="DevOps MCP Server (PyGithub - Raw Output)"
+    description="DB2 MCP Server - Read-only MCP server for IBM DB2 databases"
   )
   parser.add_argument(
     "--transport",
