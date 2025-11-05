@@ -322,7 +322,65 @@ See `examples/prompts_config.json` for a complete example and `docs/DYNAMIC_PROM
 
 The project includes comprehensive test coverage (**93%**) to ensure reliability.
 
-### Run Tests
+### Testing Without an IDE
+
+You can test the MCP server without connecting it to an IDE using several methods:
+
+#### Option 1: MCP Inspector (Recommended)
+
+The official MCP Inspector provides a web UI for testing:
+
+```bash
+npx @modelcontextprotocol/inspector \
+  --cli \
+  -e DB2_HOST=localhost \
+  -e DB2_PORT=50000 \
+  -e DB2_DATABASE=TESTDB \
+  -e DB2_USERNAME=db2inst1 \
+  -e DB2_PASSWORD=password \
+  uv --directory /path/to/db2-mcp-server run db2-mcp-server
+```
+
+This opens a web interface (usually http://localhost:5173) where you can interactively test tools, prompts, and resources.
+
+#### Option 2: Python Test Client
+
+Use the included test client to verify all functionality:
+
+```bash
+source .venv/bin/activate
+python test_mcp_client.py
+```
+
+This tests:
+- Tool registration and schema validation
+- Tool execution with real DB2 queries
+- Prompt listing and functionality
+- Resource access
+
+#### Option 3: STDIO Transport Test
+
+Test the server exactly as an IDE would connect to it:
+
+```bash
+python test_via_stdio.py
+```
+
+This simulates JSON-RPC communication over STDIO, showing exactly what data is exchanged between the server and client.
+
+#### Option 4: HTTP Mode
+
+Run the server in HTTP mode for manual testing:
+
+```bash
+./test_mcp_http.sh
+# Server runs on http://127.0.0.1:3721/mcp
+```
+
+### Unit Tests
+
+Run the full test suite with pytest:
+
 ```bash
 source .venv/bin/activate
 
